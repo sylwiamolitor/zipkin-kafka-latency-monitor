@@ -1,6 +1,17 @@
 ---
 version: '2'
 services:
+  my-kafka:
+    image: kafkatest:latest
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - '9093:9093'
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1
+    depends_on:
+      - kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:5.3.0
     ports:

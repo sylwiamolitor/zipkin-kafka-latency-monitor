@@ -33,7 +33,6 @@ Then in each one of them start: `zookeeper-server-start.bat ../../config/zookeep
 Docker version:
 Start Docker Desktop.
 Use the command `docker-compose up -d`.
-Verify if servers are listening: `netstat -ano | findStr "22181"`, `netstat -ano | findStr "29092"`, `netstat -ano | findStr "32181"`, `netstat -ano | findStr "39092"`, `netstat -ano | findStr "9092"`
 
 ## Usage
 Use request or use OpenAPI to send message POST http://localhost:9092/api/v1/messages.
