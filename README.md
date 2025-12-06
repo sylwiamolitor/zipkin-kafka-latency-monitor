@@ -35,7 +35,7 @@ Prerequisites:
 - Java (to run the application JAR)
 - Kafka (local) or Docker (recommended)
 - Docker Desktop (if using Docker)
-
+//TODO ZOOKEEPER to delete
 A. Start Kafka locally (Windows):
 1. Open two terminals.
 2. Navigate to Kafka bin directory, e.g.:
@@ -67,7 +67,7 @@ D. Run the application:
 Send messages via the API or use the OpenAPI UI.
 
 - Publish message (example):
-  POST http://localhost:8080/api/v1/messages
+  POST http://localhost:8090/api/v1/messages
   Body (JSON):
   {
     "key": "some-key",
@@ -75,7 +75,7 @@ Send messages via the API or use the OpenAPI UI.
   }
 
 - OpenAPI / Swagger UI (if enabled):
-  http://localhost:8080/swagger-ui/index.html
+  http://localhost:8090/swagger-ui/index.html
 
 - Zipkin UI (default):
   http://localhost:9411/zipkin/
