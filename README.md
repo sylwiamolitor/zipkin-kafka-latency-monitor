@@ -1,6 +1,6 @@
 # Kafkatest
 
-An application for testing Kafka data processing capabilities with Zipkin for tracing and latency troubleshooting.
+A lightweight application for testing Apache Kafka message publishing and consumption, with Zipkin integration for distributed tracing and latency troubleshooting.
 
 ## Table of Contents
 - [General Information](#general-information)
@@ -13,79 +13,107 @@ An application for testing Kafka data processing capabilities with Zipkin for tr
 - [Room for Improvement](#room-for-improvement)
 
 ## General Information
-This project tests Kafka message publishing/consumption and collects timing data with Zipkin to help troubleshoot latency issues.
+This project is designed to test Kafka-based data processing pipelines.  
+It publishes and consumes Kafka messages and collects tracing data via Zipkin to help identify performance bottlenecks and latency issues.
+Kafka is configured in **KRaft mode (ZooKeeper-less)** and runs via **Docker Compose**, making local setup simple and consistent.
 
 ## Technologies Used
-- Java
-- Docker
-- Apache Kafka
+- Java / Spring Boot
+- Docker & Docker Compose
+- Apache Kafka (KRaft mode)
 - OpenAPI / Swagger
 - Zipkin
 
 ## Features
-- Publish messages to Kafka topics
-- Collect and view tracing/latency data via Zipkin
+- Publish messages to Kafka topics via REST API
+- Consume Kafka messages for processing
+- Distributed tracing and latency analysis using Zipkin
+- Fully containerized local development environment
 
 ## Screenshots
 ![img.png](img.png)
 
 ## Setup
 
-Prerequisites:
-- Java (to run the application JAR)
-- Kafka (local) or Docker (recommended)
-- Docker Desktop (if using Docker)
-//TODO ZOOKEEPER to delete
-A. Start Kafka locally (Windows):
-1. Open two terminals.
-2. Navigate to Kafka bin directory, e.g.:
-   cd kafka_location\bin\windows
-3. In terminal 1:
-   zookeeper-server-start.bat ..\..\config\zookeeper.properties
-4. In terminal 2:
-   kafka-server-start.bat ..\..\config\server.properties
+### Prerequisites
+- Docker Desktop
+- Docker Compose
+- Java (only required if running the JAR outside Docker)
 
-B. Start Kafka locally (Linux / macOS):
-1. Open two terminals.
-2. In terminal 1:
-   ./bin/zookeeper-server-start.sh ./config/zookeeper.properties
-3. In terminal 2:
-   ./bin/kafka-server-start.sh ./config/server.properties
+### Running with Docker (Recommended)
 
-C. Using Docker (recommended):
-1. Start Docker Desktop.
-2. From the repository root (where docker-compose.yml is located) run:
-   docker-compose up -d
-This will start Kafka, Zookeeper, Zipkin (if configured), and other services defined in the compose file.
+Kafka runs in **KRaft mode**, so **ZooKeeper is NOT required**.
 
-D. Run the application:
-- Build the JAR (if not already built) and run:
-  java -jar path/to/your-app.jar
-- Ensure the application configuration (bootstrap servers, Zipkin URL, ports) matches your environment.
+1. Start Docker Desktop
+2. From the repository root (where `docker-compose.yml` is located), run:
+
+```bash
+docker-compose up -d
+```
+
+This will start:
+- Kafka (KRaft mode)
+- The application (`kafkatest`)
+- Zipkin
+
+3. Verify services are running:
+
+```bash
+docker-compose ps
+```
+
+### Running the Application Without Docker (Optional)
+If you want to run the application locally:
+1. Ensure Kafka is running and accessible
+2. Build and run the JAR:
+
+```bash
+java -jar path/to/kafkatest.jar
+```
+
+3. Make sure application properties match your environment:
+- Kafka bootstrap servers
+- Zipkin URL
+- Application port
+
+---
 
 ## Usage
-Send messages via the API or use the OpenAPI UI.
 
-- Publish message (example):
-  POST http://localhost:8090/api/v1/messages
-  Body (JSON):
-  {
-    "key": "some-key",
-    "value": "your message payload"
-  }
+### Publish a Message
 
-- OpenAPI / Swagger UI (if enabled):
-  http://localhost:8090/swagger-ui/index.html
+**Endpoint**
+```http
+POST http://localhost:8090/api/v1/messages
+```
 
-- Zipkin UI (default):
-  http://localhost:9411/zipkin/
-  Use the "RUN QUERY" button to view traces and latency information.
+**Body (JSON)**
+```json
+{
+  "key": "some-key",
+  "value": "your message payload"
+}
+```
+
+### OpenAPI / Swagger UI
+
+```text
+http://localhost:8090/swagger-ui/index.html
+```
+
+### Zipkin UI
+
+```text
+http://localhost:9411/zipkin/
+```
+
+Use the **RUN QUERY** button to inspect traces and latency information.
 
 ## Project Status
 In progress.
 
 ## Room for Improvement
-- Add consumer-side processing examples.
-- Add automated tests and CI for integration tests.
-- Provide docker-compose examples to run a full local stack with Kafka and Zipkin.
-
+- Add more consumer-side processing examples
+- Add integration tests and CI pipelines
+- Provide a multi-broker Kafka KRaft setup
+- Improve observability dashboards and metrics

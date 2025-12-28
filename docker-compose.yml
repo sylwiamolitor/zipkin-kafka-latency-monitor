@@ -32,3 +32,9 @@ services:
       SPRING_KAFKA_CONSUMER_GROUP_ID: my-group
       SPRING_KAFKA_LISTENER_MISSING_TOPICS_FATAL: "false"
       MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1"
+
+  zipkin:
+    image: openzipkin/zipkin:2.27
+    container_name: zipkin
+    ports:
+      - "9411:9411"
