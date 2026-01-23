@@ -1,7 +1,10 @@
+version: "3.9"
+
 services:
   kafka:
     image: apache/kafka:3.7.0
     container_name: kafka
+    networks: [observability]
     ports:
       - "9092:9092"
     environment:
@@ -23,18 +26,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: kafkatest
+    networks: [observability]
     ports:
       - "8090:8090"
     depends_on:
-      - kafka
+      kafka:
+        condition: service_started
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_KAFKA_CONSUMER_GROUP_ID: my-group
       SPRING_KAFKA_LISTENER_MISSING_TOPICS_FATAL: "false"
       MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1"
+      MANAGEMENT_TRACING_EXPORT_ZIPKIN_ENABLED: "true"
+      MANAGEMENT_TRACING_EXPORT_ZIPKIN_ENDPOINT: "http://zipkin:9411/api/v2/spans"
+      MANAGEMENT_TRACING_APPLICATION_NAME: "kafkatest"
+
 
   zipkin:
     image: openzipkin/zipkin:2.27
     container_name: zipkin
     ports:
       - "9411:9411"
+    networks: [ observability ]
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC: ZIPKIN_TOPIC
+
+networks:
+  observability:
+    driver: bridge
