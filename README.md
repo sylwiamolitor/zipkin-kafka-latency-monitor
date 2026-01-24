@@ -31,7 +31,7 @@ Kafka is configured in **KRaft mode (ZooKeeper-less)** and runs via **Docker Com
 - Fully containerized local development environment
 
 ## Screenshots
-![img.png](img.png)
+![img.png](images/img.png)
 
 ## Setup
 
