@@ -1,5 +1,7 @@
 package com.sylwia.kafkatest;
 
+import com.sylwia.kafkatest.api.controller.MessageController;
+import com.sylwia.kafkatest.api.dto.MessageRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

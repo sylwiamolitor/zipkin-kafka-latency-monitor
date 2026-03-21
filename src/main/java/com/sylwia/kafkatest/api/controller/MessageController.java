@@ -1,5 +1,6 @@
-package com.sylwia.kafkatest;
+package com.sylwia.kafkatest.api.controller;
 
+import com.sylwia.kafkatest.api.dto.MessageRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.kafka.core.KafkaTemplate;
