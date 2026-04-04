@@ -1,6 +1,6 @@
 package com.sylwia.kafkatest.api.controller;
 
-import com.sylwia.kafkatest.api.dto.MessageRequest;
+import com.sylwia.kafkatest.api.dto.Message;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,7 +21,7 @@ public class MessageController {
 
     @PostMapping
     @Operation(summary = "Method for publishing messages.")
-    public void publish(@RequestBody MessageRequest request) {
-        kafkaTemplate.send("sylwia", request.message());
+    public void publish(@RequestBody Message request) {
+        kafkaTemplate.send("sylwia", request.getMessage());
     }
 }
