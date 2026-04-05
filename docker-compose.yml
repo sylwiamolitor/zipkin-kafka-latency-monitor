@@ -49,6 +49,28 @@ services:
       MANAGEMENT_TRACING_EXPORT_ZIPKIN_ENDPOINT: "http://zipkin:9411/api/v2/spans"
       MANAGEMENT_TRACING_APPLICATION_NAME: "kafkatest"
 
+  kafka-ui:
+    image: tchiotludo/akhq:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    networks: [ observability ]
+    entrypoint: |
+      sh -c '
+      echo "Creating application.yml..."
+      cat <<EOL > /app/application.yml
+      ---
+      akhq:
+        connections:
+          local:
+            properties:
+              bootstrap.servers: "kafka:9092"
+        security:
+          default-group: admin
+      EOL
+      cat /app/application.yml
+      exec java -jar /app/akhq.jar
+      '
 
   zipkin:
     image: openzipkin/zipkin:2.27
