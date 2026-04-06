@@ -7,6 +7,7 @@ distributed tracing and latency troubleshooting.
 
 - [General Information](#general-information)
 - [Technologies Used](#technologies-used)
+- [Architecture](#architecture)
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [Setup](#setup)
@@ -19,6 +20,7 @@ distributed tracing and latency troubleshooting.
 This project is designed to test Kafka-based data processing pipelines.  
 It publishes and consumes Kafka messages and collects tracing data via Zipkin to help identify performance bottlenecks
 and latency issues.
+
 Kafka is configured in **KRaft mode (ZooKeeper-less)** and runs via **Docker Compose**, making local setup simple and
 consistent.
 
@@ -29,12 +31,40 @@ consistent.
 - Apache Kafka (KRaft mode)
 - OpenAPI / Swagger
 - Zipkin
+- Elasticsearch
+- AKHQ (Kafka UI)
+
+---
+
+## Architecture
+
+The application runs as a fully containerized environment using Docker Compose.
+
+### Services Overview
+
+- **Kafka (KRaft mode)**  
+  Runs as a single-node Kafka broker without ZooKeeper.
+
+- **kafkatest (Spring Boot app)**  
+  Produces and consumes Kafka messages and sends tracing data to Zipkin.
+
+- **Kafka UI (AKHQ)**  
+  Web interface to inspect Kafka topics, messages, and brokers.
+
+- **Zipkin**  
+  Collects and visualizes distributed tracing data.
+
+- **Elasticsearch**  
+  Provides storage backend (used for observability and future extensions).
+
+---
 
 ## Features
 
 - Publish messages to Kafka topics via REST API
 - Consume Kafka messages for processing
 - Distributed tracing and latency analysis using Zipkin
+- Kafka UI for inspecting topics and messages
 - Fully containerized local development environment
 
 ## Screenshots
