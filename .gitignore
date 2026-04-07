@@ -40,3 +40,4 @@ build/
 
 ### Visual Studio Code ###
 .vscode/
+.env

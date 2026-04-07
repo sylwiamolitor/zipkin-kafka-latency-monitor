@@ -73,6 +73,10 @@ The application runs as a fully containerized environment using Docker Compose.
 
 ## Setup
 
+Define the following environment variables in a `.env` file (you can use `.env.example` as a reference):
+
+- `CLUSTER_ID` — Kafka cluster identifier, e.g. `MkU3OEVBNTcwNTJENDM2Qk`
+
 ### Prerequisites
 
 - Docker Desktop
@@ -87,7 +91,8 @@ Kafka runs in **KRaft mode**, so **ZooKeeper is NOT required**.
 2. From the repository root (where `docker-compose.yml` is located), run:
 
 ```bash
-docker-compose up -d
+
+docker compose --env-file .env up --build
 ```
 
 This will start:
