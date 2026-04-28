@@ -1,0 +1,4 @@
+target/*
+!target/kafkatest-*.jar
+.git
+node_modules
