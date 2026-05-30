@@ -48,6 +48,8 @@ services:
       MANAGEMENT_TRACING_EXPORT_ZIPKIN_ENABLED: "true"
       MANAGEMENT_TRACING_EXPORT_ZIPKIN_ENDPOINT: "http://zipkin:9411/api/v2/spans"
       MANAGEMENT_TRACING_APPLICATION_NAME: "kafkatest"
+      SPRING_ELASTICSEARCH_URIS: "http://elasticsearch:9200"
+
 
   kafka-ui:
     image: tchiotludo/akhq:latest
