@@ -8,6 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/v1/messages")
@@ -29,7 +30,18 @@ public class MessageController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Simple search in messages.")
     public List<Message> search(@RequestParam String query) {
-        return messageRepository.search(query);
+
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+
+        List<Message> results = messageRepository.search(query);
+
+        return results.stream()
+            .filter(Objects::nonNull)
+            .limit(10)
+            .toList();
     }
 }
