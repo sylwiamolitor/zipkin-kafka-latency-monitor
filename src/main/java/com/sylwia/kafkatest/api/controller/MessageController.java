@@ -15,10 +15,10 @@ import java.util.Objects;
 @Tag(name = "Operations on messages.")
 public class MessageController {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Message> kafkaTemplate;
     private final MessageRepository messageRepository;
 
-    public MessageController(KafkaTemplate<String, String> kafkaTemplate, MessageRepository messageRepository) {
+    public MessageController(KafkaTemplate<String, Message> kafkaTemplate, MessageRepository messageRepository) {
         this.kafkaTemplate = kafkaTemplate;
         this.messageRepository = messageRepository;
     }
@@ -26,7 +26,7 @@ public class MessageController {
     @PostMapping
     @Operation(summary = "Method for publishing messages.")
     public void publish(@RequestBody Message request) {
-        kafkaTemplate.send("sylwia", request.getMessage());
+        kafkaTemplate.send("sylwia", request);
     }
 
     @GetMapping("/search")

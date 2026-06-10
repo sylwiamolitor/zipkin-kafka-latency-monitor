@@ -5,8 +5,6 @@ import com.sylwia.kafkatest.api.repository.MessageRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class KafkaConsumerService {
 
@@ -16,13 +14,9 @@ public class KafkaConsumerService {
         this.repository = repository;
     }
 
-    @KafkaListener(topics = "sylwia", groupId = "groupId")
-    void listener(String data) {
-        Message doc = new Message(
-            UUID.randomUUID().toString(),
-            data
-        );
-
-        repository.save(doc);
+    @KafkaListener(topics = "sylwia", groupId = "groupId",
+        containerFactory = "kafkaListenerContainerFactory")
+    void listener(Message data) {
+        repository.save(data);
     }
 }

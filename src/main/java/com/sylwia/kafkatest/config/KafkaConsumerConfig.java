@@ -1,5 +1,7 @@
 package com.sylwia.kafkatest.config;
 
+import com.sylwia.kafkatest.api.dto.Message;
+import com.sylwia.kafkatest.filter.MessageFilter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,20 +27,24 @@ public class KafkaConsumerConfig {
         HashMap<String, Object> property = new HashMap<>();
         property.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         property.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        property.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        property.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        property.put(JsonDeserializer.TRUSTED_PACKAGES, "com.sylwia.kafkatest.api.dto");
+        property.put(JsonDeserializer.VALUE_DEFAULT_TYPE, Message.class.getName());
         return property;
     }
 
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    public ConsumerFactory<String, Message> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, Message> kafkaListenerContainerFactory(
+        MessageFilter messageFilter) {
+        ConcurrentKafkaListenerContainerFactory<String, Message> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.setRecordFilterStrategy(messageFilter);
         return factory;
     }
 }

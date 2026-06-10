@@ -1,5 +1,6 @@
 package com.sylwia.kafkatest;
 
+import com.sylwia.kafkatest.api.dto.Message;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +17,7 @@ public class KafkatestApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
-        return args -> kafkaTemplate.send("sylwia", "test message :D");
+    CommandLineRunner commandLineRunner(KafkaTemplate<String, Message> kafkaTemplate) {
+        return args -> kafkaTemplate.send("sylwia", new Message());
     }
 }

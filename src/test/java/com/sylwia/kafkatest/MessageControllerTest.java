@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 class MessageControllerTest {
 
     @Mock
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, Message> kafkaTemplate;
 
     @InjectMocks
     private MessageController messageController;
@@ -32,11 +32,11 @@ class MessageControllerTest {
         messageController.publish(request);
 
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
 
         verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), messageCaptor.capture());
 
         assertEquals("sylwia", topicCaptor.getValue());
-        assertEquals("Test Message", messageCaptor.getValue());
+        assertEquals(request, messageCaptor.getValue());
     }
 }
