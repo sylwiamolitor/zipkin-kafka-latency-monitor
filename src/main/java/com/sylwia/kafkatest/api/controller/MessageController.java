@@ -4,11 +4,10 @@ import com.sylwia.kafkatest.api.dto.Message;
 import com.sylwia.kafkatest.api.repository.MessageRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/v1/messages")
@@ -30,18 +29,15 @@ public class MessageController {
     }
 
     @GetMapping("/search")
-    @Operation(summary = "Simple search in messages.")
-    public List<Message> search(@RequestParam String query) {
+    @Operation(summary = "Paginated search in messages.")
+    public Page<Message> search(
+        @RequestParam String query,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
 
-        if (query == null || query.isBlank()) {
-            return List.of();
-        }
-
-        List<Message> results = messageRepository.search(query);
-
-        return results.stream()
-            .filter(Objects::nonNull)
-            .limit(10)
-            .toList();
+        return messageRepository.findByMessageContaining(
+            query,
+            PageRequest.of(page, Math.min(size, 100))
+        );
     }
 }

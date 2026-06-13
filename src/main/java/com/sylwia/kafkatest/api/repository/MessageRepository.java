@@ -1,6 +1,8 @@
 package com.sylwia.kafkatest.api.repository;
 
 import com.sylwia.kafkatest.api.dto.Message;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
@@ -10,5 +12,10 @@ public interface MessageRepository extends ElasticsearchRepository<Message, Stri
 
     @Query("{\"match\": {\"message\": \"?0\"}}")
     List<Message> search(String text);
+
+    Page<Message> findByMessageContaining(
+        String text,
+        Pageable pageable
+    );
 
 }
