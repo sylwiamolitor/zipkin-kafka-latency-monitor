@@ -1,35 +1,29 @@
 package com.sylwia.kafkatest.api.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
+import java.time.Instant;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(indexName = "messages")
 public class Message {
+
     @Id
+    @Field(type = FieldType.Keyword)
     private String id;
+
+    @MultiField(mainField = @Field(type = FieldType.Text),
+        otherFields = {
+            @InnerField(suffix = "keyword", type = FieldType.Keyword)
+        })
     private String message;
 
-    public Message() {
-    }
-
-    public Message(String id, String message) {
-        this.id = id;
-        this.message = message;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    @Field(type = FieldType.Date)
+    private Instant createdAt;
 }

@@ -6,8 +6,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/messages")
@@ -16,6 +21,8 @@ public class MessageController {
 
     private final KafkaTemplate<String, Message> kafkaTemplate;
     private final MessageRepository messageRepository;
+    private static final Set<String> ALLOWED_SORT_FIELDS =
+        Set.of("message.keyword", "createdAt");
 
     public MessageController(KafkaTemplate<String, Message> kafkaTemplate, MessageRepository messageRepository) {
         this.kafkaTemplate = kafkaTemplate;
@@ -25,19 +32,36 @@ public class MessageController {
     @PostMapping
     @Operation(summary = "Method for publishing messages.")
     public void publish(@RequestBody Message request) {
+        if (request.getCreatedAt() == null) {
+            request.setCreatedAt(Instant.now());
+        }
         kafkaTemplate.send("sylwia", request);
     }
 
     @GetMapping("/search")
-    @Operation(summary = "Paginated search in messages.")
+    @Operation(summary = "Search messages by query with pagination and sorting.",
+        description = "Allowed sort fields: message.keyword, createdAt")
     public Page<Message> search(
         @RequestParam String query,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "createdAt") String sortBy,
+        @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
 
-        return messageRepository.findByMessageContaining(
-            query,
-            PageRequest.of(page, Math.min(size, 100))
+        if (query.isBlank()) {
+            return Page.empty();
+        }
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            sortBy = "createdAt";
+        }
+
+        Pageable pageable = PageRequest.of(
+            page,
+            Math.min(size, 100),
+            Sort.by(direction, sortBy)
         );
+
+        return messageRepository.findByMessageContaining(query, pageable);
     }
 }

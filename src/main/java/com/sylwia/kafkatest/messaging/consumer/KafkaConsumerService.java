@@ -5,6 +5,8 @@ import com.sylwia.kafkatest.api.repository.MessageRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+
 @Component
 public class KafkaConsumerService {
 
@@ -17,6 +19,9 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "sylwia", groupId = "groupId",
         containerFactory = "kafkaListenerContainerFactory")
     void listener(Message data) {
+        if (data.getCreatedAt() == null) {
+            data.setCreatedAt(Instant.now());
+        }
         repository.save(data);
     }
 }

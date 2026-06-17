@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +28,7 @@ class MessageControllerTest {
 
     @Test
     void testPublish() {
-        Message request = new Message(UUID.randomUUID().toString(), "Test Message");
+        Message request = new Message(UUID.randomUUID().toString(), "Test Message", Instant.now());
 
         messageController.publish(request);
 
