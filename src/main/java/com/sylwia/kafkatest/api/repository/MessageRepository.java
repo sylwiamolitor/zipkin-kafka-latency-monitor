@@ -18,4 +18,5 @@ public interface MessageRepository extends ElasticsearchRepository<Message, Stri
         Pageable pageable
     );
 
+    List<Message> findByTopicIgnoreCase(String topic);
 }

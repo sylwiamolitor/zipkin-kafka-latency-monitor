@@ -28,7 +28,7 @@ class MessageControllerTest {
 
     @Test
     void testPublish() {
-        Message request = new Message(UUID.randomUUID().toString(), "Test Message", Instant.now());
+        Message request = new Message(UUID.randomUUID().toString(), "Test Message", Instant.now(), "sylwia");
 
         messageController.publish(request);
 

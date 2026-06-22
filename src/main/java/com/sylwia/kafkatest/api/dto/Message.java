@@ -26,4 +26,7 @@ public class Message {
 
     @Field(type = FieldType.Date)
     private Instant createdAt;
+
+    @Field(type = FieldType.Keyword)
+    private String topic;
 }

@@ -27,7 +27,7 @@ public class MessageController {
     private final MessageRepository messageRepository;
     private final KafkaService kafkaService;
     private static final Set<String> ALLOWED_SORT_FIELDS =
-        Set.of("message.keyword", "createdAt");
+        Set.of("message.keyword", "createdAt", "topic");
 
     @PostMapping
     @Operation(summary = "Method for publishing messages.")
@@ -35,7 +35,7 @@ public class MessageController {
         if (request.getCreatedAt() == null) {
             request.setCreatedAt(Instant.now());
         }
-        kafkaTemplate.send("sylwia", request);
+        kafkaTemplate.send(request.getTopic(), request);
     }
 
     @GetMapping("/search")
@@ -69,5 +69,11 @@ public class MessageController {
     @Operation(summary = "Returns topic list")
     public List<String> getTopics() {
         return kafkaService.getTopics();
+    }
+
+    @GetMapping("/topics/{topic}/messages")
+    @Operation(summary = "Returns messages in a topic")
+    public List<Message> getMessagesByTopic(@PathVariable String topic) {
+        return messageRepository.findByTopicIgnoreCase(topic);
     }
 }
