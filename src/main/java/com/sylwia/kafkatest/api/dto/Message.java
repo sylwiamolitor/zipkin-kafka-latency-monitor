@@ -29,4 +29,7 @@ public class Message {
 
     @Field(type = FieldType.Keyword)
     private String topic;
+
+    @Field(type = FieldType.Keyword)
+    private String author;
 }

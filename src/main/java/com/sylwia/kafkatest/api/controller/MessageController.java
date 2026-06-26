@@ -1,8 +1,10 @@
 package com.sylwia.kafkatest.api.controller;
 
 import com.sylwia.kafkatest.api.dto.Message;
+import com.sylwia.kafkatest.api.dto.MessageStats;
 import com.sylwia.kafkatest.api.repository.MessageRepository;
 import com.sylwia.kafkatest.messaging.service.KafkaService;
+import com.sylwia.kafkatest.messaging.service.StatisticsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +31,7 @@ public class MessageController {
     private final KafkaService kafkaService;
     private static final Set<String> ALLOWED_SORT_FIELDS =
         Set.of("message.keyword", "createdAt", "topic");
+    private final StatisticsService statisticsService;
 
     @PostMapping
     @Operation(summary = "Method for publishing messages.")
@@ -75,5 +79,10 @@ public class MessageController {
     @Operation(summary = "Returns messages in a topic")
     public List<Message> getMessagesByTopic(@PathVariable String topic) {
         return messageRepository.findByTopicIgnoreCase(topic);
+    }
+
+    @GetMapping("/stats")
+    public MessageStats stats() throws IOException {
+        return statisticsService.getStats();
     }
 }
